@@ -1,0 +1,34 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller pdf2docx docx2pdf
+
+      - name: Build with .spec
+        run: |
+          pyinstaller 문제커팅기.spec
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: 문제커팅기
+          path: dist/문제커팅기.exe
